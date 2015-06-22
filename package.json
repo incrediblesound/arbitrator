@@ -1,0 +1,14 @@
+{
+  "name": "Arbitrator",
+  "version": "1.0.0",
+  "description": "A stand alone rules engine",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "James H Edwards",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.8.1"
+  }
+}

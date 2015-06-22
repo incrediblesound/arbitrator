@@ -1,0 +1,36 @@
+type(Person) {
+	name: string
+	age: number
+	sex: string
+}
+
+type(Animal) {
+	name: string
+	genus: string
+	species: string
+}
+
+Person(1) {
+	name: John
+	age: 21
+	sex: male
+}
+
+Person(2) {
+	name: Mary
+	age: 22
+	sex: female
+}
+
+Person(3) {
+	name: Dave
+	age: 55
+	sex: male
+}
+
+match(Person, middle_aged) {
+	age: gt(50)
+}
+match(Person, female) {
+	sex: eq(female)
+}
