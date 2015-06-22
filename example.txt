@@ -4,7 +4,7 @@ type(Person) {
 	sex: string
 }
 
-type(Animal) {
+type(Plant) {
 	name: string
 	genus: string
 	species: string
@@ -28,9 +28,24 @@ Person(3) {
 	sex: male
 }
 
+Plant(1) {
+	name: Tea
+	genus: Camellia
+	species: Chinensis
+}
+
+Plant(2) {
+	name: Stewardia
+	genus: Stewardia
+	species: Pseudocamellia	
+}
+
 match(Person, middle_aged) {
 	age: gt(50)
 }
 match(Person, female) {
 	sex: eq(female)
+}
+match(Plant, true_tea){
+	genus: eq(Camellia)
 }

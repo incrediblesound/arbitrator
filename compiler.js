@@ -2,8 +2,13 @@ var fs = require('fs');
 var data = {};
 
 module.exports = function(tree, name){
-	var output = '#include \"structures.h\"\n';
-	var output = '#include \"functions.h\"\n\n';
+	var output = '#include <stdio.h>\n';
+	output += '#include \"functions.h\"\n\n';
+	output += '#define GREEN   "\x1b[32m"\n';
+	output += '#define YELLOW  "\x1b[33m"\n';
+	output += '#define BLUE    "\x1b[34m"\n';
+	output += '#define RED    "\x1b[31m"\n';
+	output += '#define RESET   "\x1b[0m"\n';
 	output = writeTypes(tree, output)
 	output += 'int main(){ \n';
 	output = writeRecords(tree, output);
@@ -75,22 +80,24 @@ function writeTests(tree, output){
 		var cmp = test.get(key)[1];
 		var comparator = test.get(key)[0];
 		if(propType === 'string'){
-			output += 'struct Value cmpVal = { { .string = { \"'+cmp+'\", '+cmp.length+'}}, \'s\', "test" }\n';
+			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .string = { \"'+cmp+'\", '+cmp.length+'}}, \'s\', "test" };\n';
 		} else {
-			output += 'struct Value cmpVal = { { .number = '+cmp+' }, \'n\', "test" }\n';
+			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .number = '+cmp+' }, \'n\', "test" };\n';
 		}
 		// { { .string = { "John", 4 }}, 's', "name" }
 		output += 'for(int i = 0; i < '+data[test.type].idx+'; i++){\n';
 		if(comparator === 'eq'){
-			output += 'int result = equalTo('+test.type+'_records[i], cmpVal);\n';
+
+			output += 'int result = equalTo('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
 		}
 		else if(comparator === 'lt'){
-			output += 'int result = lessThan('+test.type+'_records[i], cmpVal);\n';
+			output += 'int result = lessThan('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
 		}
 		else if(comparator === 'gt'){
-			output += 'int result = greaterThan('+test.type+'_records[i], cmpVal);\n';
+			output += 'int result = greaterThan('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
 		}
-		
+		output += 'if(result == 1){ printf(BLUE"'+test.type+'\"RESET\" with id \"RED\"%s\"RESET\" passes test \"GREEN\"'+test.name+'\"RESET\"\\n", '+test.type+'_records[i].id); }\n';
+		output += '}\n';
 	})
 	return output;
 }
