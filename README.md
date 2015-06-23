@@ -1,7 +1,7 @@
 # Arbitrator
 An interpreted language for rule-based matching on data sets
 
-Arbitrator is a simple language with three parts: types, records, and rules.
+Arbitrator is a simple language with three parts: types, records, and rules. When you run the code, Arbitrator will tell you which records pass the tests defined by your rules.
 
 ## Types
 A type defines a schema for a certain class of record. Types have a label followed by a set of properties with data-types for each property. The format consists of the word type followed by the label in parenthesis, and then property name/type pairs divided by colons. Currently properties can only have type string or number, but I hope to add a list type soon.
