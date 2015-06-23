@@ -33,7 +33,7 @@ Person(2){
 ##Rules
 A rule is a test that returns matches when the program is run. A rule consists of the word match followed by the type implicated in the rule and the name of the rule in parenthesis. The body of the rule, the part in brackets, consists of a property and a constraint expression separated by a colon.
 ###Constraint Expressions
-Constraint expressions are composed of a function and a value. The value type of the value given to the constrain function defaults to the value type of the property as defined in the type declaration, but this can be overrided by providing a value type as a second argument to the constraint function.
+Constraint expressions are composed of a function and a value. The value type of the value given to the constrain function defaults to the value type of the property as defined in the type declaration, but this can be overrided by providing a value type as a second argument to the constraint function.    
 gt() -- greater than    
 lt() -- less than    
 eq() -- equal to    
