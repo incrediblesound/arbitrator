@@ -22,6 +22,12 @@ Person(2) {
 	sex: female
 }
 
+Person(4) {
+	name: Macklehibblestein
+	age: 56
+	sex: male
+}
+
 Person(3) {
 	name: Dave
 	age: 55
@@ -42,6 +48,9 @@ Plant(2) {
 
 match(Person, middle_aged) {
 	age: gt(50)
+}
+match(Person, long_name) {
+	name: gt(15, number)
 }
 match(Person, female) {
 	sex: eq(female)

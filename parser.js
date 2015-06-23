@@ -97,7 +97,8 @@ function process(state){
 				return;
 			}
 			var expression = pair[1];
-			expression = state.makeArray(expression, new RegExp(/\(|\)/));
+			expression = state.makeArray(expression, new RegExp(/\(|\)|,/));
+			console.log(expression)
 			currentRule.set(pair[0], expression);
 		}
 		root.tests.push(currentRule);

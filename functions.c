@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <stdio.h>
 
 int greaterThan(struct Value a, struct Value b){
 	if(a.type == 's' && b.type == 'n'){
@@ -34,7 +35,7 @@ int lessThan(struct Value a, struct Value b){
 
 int equalTo(struct Value a, struct Value b){
 	if(a.type == 's' && b.type == 's'){
-		return !strcmp(a.data.string.body, b.data.string.body) ? 1 : 0
+		return !strcmp(a.data.string.body, b.data.string.body) ? 1 : 0;
 	}
 	else if(a.type == 's' && b.type == 'n'){
 		int len = a.data.string.length;

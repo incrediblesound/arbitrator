@@ -1,4 +1,5 @@
 var fs = require('fs');
+var exec = require('child_process').exec;
 var data = {};
 
 module.exports = function(tree, name){
@@ -15,6 +16,13 @@ module.exports = function(tree, name){
 	output = writeTests(tree, output);
 	output += 'return 0;\n }\n';
 	fs.writeFileSync('output.c', output);
+	exec('gcc -c output.c -o output.o\n'+
+		 'gcc -c functions.c -o funcs.o\n'+
+		 'gcc output.o funcs.o -o '+name, function(err){
+		if(err) console.log(err);
+		// exec('rm -rf output.c');
+		return;
+	});
 }
 
 function writeTypes(tree, output){
@@ -74,11 +82,12 @@ function writeRecords(tree, output){
 function writeTests(tree, output){
 	forEach(tree.tests, function(test, idx){
 		var key = Object.keys(test.data)[0];
+		var testData = test.get(key);
 		var type = tree.getType(test.type);
-		var propType = type.get(key);
-		console.log(test, key)
-		var cmp = test.get(key)[1];
-		var comparator = test.get(key)[0];
+		var cmp = testData[1];
+		var comparator = testData[0];
+		var propType = testData[2] || type.get(key);
+
 		if(propType === 'string'){
 			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .string = { \"'+cmp+'\", '+cmp.length+'}}, \'s\', "test" };\n';
 		} else {
