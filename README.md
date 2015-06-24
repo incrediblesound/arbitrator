@@ -47,7 +47,7 @@ match(Person, long_name){
   name: gt(15, number)
 }
 ```
-Notice how we tell the interpreter that the 15 is a number. This is necessary because the property "age" in the type "Person" will default to string. Running age matches against string will compare against number of characters.
+Notice how we tell the interpreter that the 15 is a number. This is necessary because the property "age" in the type "Person" will default to string. Running number matches against a string will compare against number of characters.
 
 ##Running the code
 Running an Arbitrator script is easy: put your types, records and rules in a .txt file and run like this:
