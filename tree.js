@@ -3,9 +3,19 @@ var Root = function(){
 	this.records = [];
 	this.tests = [];
 	this.typeLabels = [];
+	this.IDs = {};
 	this.hasType = function(type){
 		return this.typeLabels.indexOf(type) !== -1;
 	}
+}
+
+Root.prototype.hasID = function(id, type){
+	return this.IDs[type] !== undefined && this.IDs[type].indexOf(id) !== -1;
+}
+
+Root.prototype.storeID = function(id, type){
+	this.IDs[type] = this.IDs[type] || [];
+	this.IDs[type].push(id);
 }
 
 Root.prototype.insertType = function(type){

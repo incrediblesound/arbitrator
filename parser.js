@@ -45,6 +45,12 @@ function process(state){
 				var id = state.getValue();
 				currentRecord = new Tree();
 				currentRecord['id'] = id;
+				if(root.hasID(id, marker)){
+					console.log('Error: duplicate ID -> '+id+'.');
+					return false;
+				} else {
+					root.storeID(id, marker);
+				}
 				currentRecord['type'] = marker;
 				state.status = 'inRecord';
 				state.nextBracket();

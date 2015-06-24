@@ -10,4 +10,8 @@ var fileName = './' +name+ '.txt';
 state.text = fs.readFileSync(fileName, 'utf-8').toString();
 
 var tree = parser(state);
-compiler(tree, name);
+if(tree === false){
+	return;
+} else {
+	compiler(tree, name);
+}
