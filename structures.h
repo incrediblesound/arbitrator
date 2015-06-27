@@ -3,9 +3,15 @@ struct String {
 	int length;
 };
 
+struct List {
+	int length;
+	struct String members[20];
+};
+
 union Data {
 	int number;
 	struct String string;
+	struct List list;
 };
 
 struct Value {

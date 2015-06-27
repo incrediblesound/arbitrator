@@ -58,9 +58,18 @@ function writeRecords(tree, output){
 				if(valType === 'string'){
 					output += '{ { .string = { \"'+value+'\", '+value.length+' }}, ';
 					output += '\'s\', \"'+key+'\" }'
-				} else {
+				} else if(valType === 'number') {
 					output += '{ { .number = '+value+' }, ';
 					output += '\'n\', \"'+key+'\" }'
+				} else {
+					output += '{ {.list = {'+value.length+', { '
+					forEach(value, function(item, idx){
+						output += '{\"'+item+'\", '+item.length+'}';
+						if(idx !== value.length-1){
+							output += ', ';
+						}
+					})
+					output += '}}}, \'l\', \"'+key+'\" }';
 				}
 				if(idx !== keys.length-1){
 					output +=',\n'
@@ -87,24 +96,24 @@ function writeTests(tree, output){
 		var cmp = testData[1];
 		var comparator = testData[0];
 		var propType = testData[2] || type.get(key);
-
-		if(propType === 'string'){
+		if(propType === 'string' || ( propType === 'list' && !Array.isArray(cmp) )){
 			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .string = { \"'+cmp+'\", '+cmp.length+'}}, \'s\', "test" };\n';
-		} else {
+		} else if(propType === 'number') {
 			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .number = '+cmp+' }, \'n\', "test" };\n';
+		} else {
+			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .list = {'+cmp.length+', {';
+			forEach(cmp, function(item, idx){
+				output += '{\"'+item+'\", '+item.length+'}';
+				if(idx !== cmp.length-1){
+					output += ', ';
+				}
+			})
+			output += '}}}, \'l\', "test" };\n';
 		}
 		// { { .string = { "John", 4 }}, 's', "name" }
 		output += 'for(int i = 0; i < '+data[test.type].idx+'; i++){\n';
-		if(comparator === 'eq'){
-
-			output += 'int result = equalTo('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
-		}
-		else if(comparator === 'lt'){
-			output += 'int result = lessThan('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
-		}
-		else if(comparator === 'gt'){
-			output += 'int result = greaterThan('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
-		}
+		var func = funcMap(comparator);
+		output += 'int result = '+func+'('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
 		output += 'if(result == 1){ printf(BLUE"'+test.type+'\"RESET\" with id \"RED\"%s\"RESET\" passes test \"GREEN\"'+test.name+'\"RESET\"\\n", '+test.type+'_records[i].id); }\n';
 		output += '}\n';
 	})
@@ -117,3 +126,14 @@ function forEach(arr, fn, item){
 	}
 }
 
+function funcMap(abbreviation){
+	var map = {
+		eq: 'equalTo',
+		lt: 'lessThan',
+		gt: 'greaterThan',
+		excl: 'excluding',
+		incl: 'including',
+		all: 'all'
+	}
+	return map[abbreviation];
+}

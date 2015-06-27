@@ -107,12 +107,22 @@ function nextBracket(){
 	}
 }
 
-function makeArray(string, splitter){
+function makeArray(string, splitter, isProperty){
+	var result;
 	var array = cleanArray(string.split(splitter));
 	forEach(array, function(item, idx){
 		array[idx] = cleanString(item);
 	})
-	return array;
+	if(isProperty){
+		result = [];
+		var list = [];
+		result.push(array.shift());
+		forEach(array, function(item){
+			list.push(item);
+		})
+		result.push(list);
+	}
+	return result === undefined ? array : result;
 }
 
 function cleanString(string){

@@ -1,0 +1,26 @@
+type(Person){
+	name: string
+	interests: list
+}
+
+Person(1){
+	name: Bob
+	interests: Lapidary, Radio, Aquaculture
+}
+
+Person(2){
+	name: Tina
+	interests: Lapidary, Dancing, Sewing
+}
+
+match(Person, sewing){
+	interests: incl(Sewing)
+}
+
+match(Person, no_radio){
+	interests: excl(Radio)
+}
+
+match(Person, cool_person){
+	interests: all(Lapidary, Radio)
+}

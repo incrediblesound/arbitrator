@@ -77,7 +77,7 @@ function process(state){
 		recordBody = state.cleanArray(recordBody);
 		var typeForRecord = root.getType(currentRecord.type);
 		for(var i = 0, l = recordBody.length; i < l; i++){
-			var pair = state.makeArray(recordBody[i], ':');
+			var pair = state.makeArray(recordBody[i], new RegExp(/\:|,/), true);
 			if(!typeForRecord.hasKey(pair[0])){
 				console.log('Error: record of type '+currentRecord.type+
 					' doesn\'t have a field called '+pair[0]+'.');
@@ -104,6 +104,13 @@ function process(state){
 			}
 			var expression = pair[1];
 			expression = state.makeArray(expression, new RegExp(/\(|\)|,/));
+			if(expression.length > 2){
+				var temp = expression;
+				expression = [temp.shift(), []];
+				while(temp.length){
+					expression[1].push(temp.shift());
+				}
+			}
 			currentRule.set(pair[0], expression);
 		}
 		root.tests.push(currentRule);
