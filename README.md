@@ -41,9 +41,9 @@ Constraint expressions are composed of a function and a value. The value type of
 gt() -- greater than    
 lt() -- less than    
 eq() -- equal to     
-incl() -- including; list includes this value
-excl() -- excluding; list doesn't include this value
-all() -- all; list contains all these values
+incl() -- including; list includes this value    
+excl() -- excluding; list doesn't include this value    
+all() -- all; list contains all these values    
 
 Here are some examples:
 ```code
