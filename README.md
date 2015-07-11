@@ -47,11 +47,13 @@ all() -- all; list contains all these values
 
 Here are some examples:
 ```code
-match(Person, young){
+match(Person, teen){
   age: lt(20)
+  age: gt(12)
 }
-match(Person, well_rounded){
+match(Person, Scholar){
   hobbies: all(Art, Science, Literature)
+  hobbies: excl(Debauchery)
 }
 match(Person, long_name){
   name: gt(15, number)
