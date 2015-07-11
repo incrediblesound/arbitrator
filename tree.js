@@ -1,3 +1,5 @@
+var Set = require('./set.js');
+
 var Root = function(){
 	this.types = [];
 	this.records = [];
@@ -43,6 +45,7 @@ Root.prototype.getRecordsForType = function(type){
 
 var Tree = function(){
 	this.data = {};
+	this.testKeys = new Set();
 }
 
 Tree.prototype.insert = function(child){
@@ -53,6 +56,14 @@ Tree.prototype.insert = function(child){
 
 Tree.prototype.set = function(key, value){
 	this.data[key] = value;
+}
+
+Tree.prototype.add = function(key, value){
+	if(this.data[key] === undefined){
+		this.data[key] = [value];
+	} else {
+		this.data[key].push(value)
+	}
 }
 
 Tree.prototype.get = function(key){

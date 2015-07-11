@@ -90,31 +90,44 @@ function writeRecords(tree, output){
 
 function writeTests(tree, output){
 	forEach(tree.tests, function(test, idx){
-		var key = Object.keys(test.data)[0];
-		var testData = test.get(key);
-		var type = tree.getType(test.type);
-		var cmp = testData[1];
-		var comparator = testData[0];
-		var propType = testData[2] || type.get(key);
-		if(propType === 'string' || ( propType === 'list' && !Array.isArray(cmp) )){
-			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .string = { \"'+cmp+'\", '+cmp.length+'}}, \'s\', "test" };\n';
-		} else if(propType === 'number') {
-			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .number = '+cmp+' }, \'n\', "test" };\n';
-		} else {
-			output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .list = {'+cmp.length+', {';
-			forEach(cmp, function(item, idx){
-				output += '{\"'+item+'\", '+item.length+'}';
-				if(idx !== cmp.length-1){
-					output += ', ';
-				}
-			})
-			output += '}}}, \'l\', "test" };\n';
-		}
-		// { { .string = { "John", 4 }}, 's', "name" }
 		output += 'for(int i = 0; i < '+data[test.type].idx+'; i++){\n';
-		var func = funcMap(comparator);
-		output += 'int result = '+func+'('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+');\n';
-		output += 'if(result == 1){ printf(BLUE"'+test.type+'\"RESET\" with id \"RED\"%s\"RESET\" passes test \"GREEN\"'+test.name+'\"RESET\"\\n", '+test.type+'_records[i].id); }\n';
+		var keys = test.testKeys.all();
+		var lastResultName, newResultName;
+		forEach(keys, function(key, key_idx){
+			var testDataArray = test.get(key);
+			var type = tree.getType(test.type);
+			forEach(testDataArray, function(testData, idx){
+				var cmp = testData[1];
+				var comparator = testData[0];
+				var propType = testData[2] || type.get(key);
+				if(propType === 'string' || ( propType === 'list' && !Array.isArray(cmp) )){
+					output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .string = { \"'+cmp+'\", '+cmp.length+'}}, \'s\', "test" };\n';
+				} else if(propType === 'number') {
+					output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .number = '+cmp+' }, \'n\', "test" };\n';
+				} else {
+					output += 'struct Value cmpVal_'+comparator+'_'+key+' = { { .list = {'+cmp.length+', {';
+					forEach(cmp, function(item, idx){
+						output += '{\"'+item+'\", '+item.length+'}';
+						if(idx !== cmp.length-1){
+							output += ', ';
+						}
+					})
+					output += '}}}, \'l\', "test" };\n';
+				}
+				// { { .string = { "John", 4 }}, 's', "name" }
+				var func = funcMap(comparator);
+				newResultName = 'result_'+key_idx+'_'+idx;
+				output += 'int '+newResultName+' = '+func+'('+test.type+'_records[i].'+key+', cmpVal_'+comparator+'_'+key+')';
+				if(idx > 0 || key_idx > 0){
+					output += ' && '+lastResultName+';\n';
+				} else {
+					output += ';\n';
+				}
+				lastResultName = newResultName;
+			})
+
+		})
+		output += 'if('+lastResultName+' == 1){ printf(BLUE"'+test.type+'\"RESET\" with id \"RED\"%s\"RESET\" passes test \"GREEN\"'+test.name+'\"RESET\"\\n", '+test.type+'_records[i].id); }\n';
 		output += '}\n';
 	})
 	return output;

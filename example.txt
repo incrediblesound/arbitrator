@@ -4,12 +4,6 @@ type(Person) {
 	sex: string
 }
 
-type(Plant) {
-	name: string
-	genus: string
-	species: string
-}
-
 Person(1) {
 	name: John
 	age: 21
@@ -25,7 +19,7 @@ Person(2) {
 Person(4) {
 	name: Macklehibblestein
 	age: 56
-	sex: male
+	sex: female
 }
 
 Person(3) {
@@ -34,27 +28,12 @@ Person(3) {
 	sex: male
 }
 
-Plant(1) {
-	name: Tea
-	genus: Camellia
-	species: Chinensis
-}
-
-Plant(2) {
-	name: Stewardia
-	genus: Stewardia
-	species: Pseudocamellia	
-}
-
 match(Person, middle_aged) {
 	age: gt(50)
+	age: lt(70)
 }
-match(Person, long_name) {
-	name: gt(15, number)
-}
-match(Person, female) {
-	sex: eq(female)
-}
-match(Plant, true_tea){
-	genus: eq(Camellia)
+match(Person, draft_eligible) {
+	age: gt(17)
+	age: lt(26)
+	sex: eq(male)
 }

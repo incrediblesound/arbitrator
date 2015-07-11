@@ -111,7 +111,8 @@ function process(state){
 					expression[1].push(temp.shift());
 				}
 			}
-			currentRule.set(pair[0], expression);
+			currentRule.testKeys.addValue(pair[0]);
+			currentRule.add(pair[0], expression);
 		}
 		root.tests.push(currentRule);
 		state.status = 'out';
